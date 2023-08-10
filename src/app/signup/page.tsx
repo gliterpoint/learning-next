@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import type { Metadata } from "next";
 
@@ -12,22 +12,41 @@ export const metadata: Metadata = {
 };
 
 const SignupPage = () => {
+  const router = useRouter();
+
   const [user, setUser] = useState({
     username: "",
     email: "",
     password: "",
   });
+  const [disableButtom, setdisableButtom] = useState(true);
+  const [loading, setloading] = useState(false);
 
-  const HandleSignUp = (event: any) => {
+  useEffect(() => {
+    if (user.email.length > 0 && user.username.length > 0 && user.password.length > 0) {
+      setdisableButtom(false);
+    } else {
+      setdisableButtom(true);
+    }
+  }, [user]);
+
+  const HandleSignUp = async (event: any) => {
     event.preventDefault();
-    console.log(user);
-
-    console.log("signup");
-    setUser({
-      username: "",
-      email: "",
-      password: "",
-    });
+    try {
+      setloading(true);
+      const response = await axios.post("api/users/signup", user);
+      console.log(response.data);
+      router.push("/login");
+    } catch (error: any) {
+      console.log("Signup failed", error.message);
+    } finally {
+      setloading(false);
+      setUser({
+        username: "",
+        email: "",
+        password: "",
+      });
+    }
   };
 
   return (
@@ -36,7 +55,7 @@ const SignupPage = () => {
         <h1 className="text-3xl text-center mb-6 font-semibold">
           Movie <span className="bg-orange-500 text-black inline-block px-1">Desk</span>
         </h1>
-        <p className="font-medium text-2xl">Sign Up</p>
+        <p className="font-medium text-2xl">{loading ? "Processing" : "Sign Up"}</p>
         <form onSubmit={HandleSignUp}>
           <div className="my-4">
             <label htmlFor="username" className="block mb-1">
@@ -87,7 +106,7 @@ const SignupPage = () => {
             </label>
           </div>
           <button className="my-4 block w-full rounded-md outline-none border border-orange-500 bg-orange-500 hover:bg-orange-600 focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500">
-            Sign up
+            {disableButtom ? "No Sign up" : "Sign up"}
           </button>
         </form>
         <p className="text-center">

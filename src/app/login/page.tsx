@@ -1,5 +1,10 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Login | Next App",
@@ -7,21 +12,58 @@ export const metadata: Metadata = {
 };
 
 const LoginPage = () => {
+  const router = useRouter();
+
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+  const [disableButton, setdisableButton] = useState(true);
+  const [loading, setloading] = useState(false);
+
+  useEffect(() => {
+    if (user.email.length > 0 && user.password.length > 0) {
+      setdisableButton(false);
+    } else {
+      setdisableButton(true);
+    }
+  }, [user]);
+
+  const HandleLogin = async (event: any) => {
+    event.preventDefault();
+    try {
+      setloading(true);
+      const response = await axios.post("api/users/login", user);
+      console.log(response.data);
+      router.push("/");
+    } catch (error: any) {
+      console.log("Signup failed", error.message);
+    } finally {
+      setloading(false);
+      setUser({
+        email: "",
+        password: "",
+      });
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="max-w-sm mx-auto w-full">
         <h1 className="text-3xl text-center mb-6 font-semibold">
           Movie <span className="bg-orange-500 text-black inline-block px-1">Desk</span>
         </h1>
-        <p className="font-medium text-2xl">Login</p>
+        <p className="font-medium text-2xl">{loading ? "Processing" : "Login"}</p>
         <form>
           <div className="my-4">
             <label htmlFor="username" className="block mb-1">
-              Username
+              Email
             </label>
             <input
-              type="text"
-              placeholder="Username"
+              type="email"
+              placeholder="Email"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
               required
               className="w-full bg-transparent rounded-md outline-none border focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500"
             />
@@ -33,12 +75,17 @@ const LoginPage = () => {
             <input
               type="password"
               placeholder="password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
               required
               className="w-full bg-transparent rounded-md outline-none border focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500"
             />
           </div>
-          <button className="my-4 block w-full rounded-md outline-none border border-orange-500 bg-orange-500 hover:bg-orange-600 focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500">
-            Login
+          <button
+            onClick={HandleLogin}
+            className="my-4 block w-full rounded-md outline-none border border-orange-500 bg-orange-500 hover:bg-orange-600 focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500"
+          >
+            {disableButton ? "No Login" : "Login"}
           </button>
         </form>
         <p className="text-center">

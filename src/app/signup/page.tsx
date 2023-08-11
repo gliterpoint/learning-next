@@ -19,14 +19,14 @@ const SignupPage = () => {
     email: "",
     password: "",
   });
-  const [disableButtom, setdisableButtom] = useState(true);
+  const [disableButton, setdisableButton] = useState(true);
   const [loading, setloading] = useState(false);
 
   useEffect(() => {
     if (user.email.length > 0 && user.username.length > 0 && user.password.length > 0) {
-      setdisableButtom(false);
+      setdisableButton(false);
     } else {
-      setdisableButtom(true);
+      setdisableButton(true);
     }
   }, [user]);
 
@@ -106,7 +106,7 @@ const SignupPage = () => {
             </label>
           </div>
           <button className="my-4 block w-full rounded-md outline-none border border-orange-500 bg-orange-500 hover:bg-orange-600 focus:border-orange-500 py-3 px-4 transition-all ease-in-out duration-500">
-            {disableButtom ? "No Sign up" : "Sign up"}
+            {disableButton ? "No Sign up" : "Sign up"}
           </button>
         </form>
         <p className="text-center">

@@ -35,7 +35,7 @@ const LoginPage = () => {
       setloading(true);
       const response = await axios.post("api/users/login", user);
       console.log(response.data);
-      router.push("/");
+      router.push("/profile");
     } catch (error: any) {
       console.log("Signup failed", error.message);
     } finally {

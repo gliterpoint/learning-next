@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export const VerifyEmail = () => {
+const VerifyEmail = () => {
   const [Token, setToken] = useState("");
   const [Verified, setVerified] = useState(false);
   const [Error, setError] = useState(false);
@@ -21,7 +21,7 @@ export const VerifyEmail = () => {
 
   useEffect(() => {
     const urlToken = window.location.search.split("=")[1];
-    setToken(urlToken);
+    setToken(urlToken || "");
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const VerifyEmail = () => {
   }, [Token]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center flex-col min-h-screen">
       <h1 className="text-4xl text-center mb-10 ">Verify Your Email...</h1>
       <h4 className="bg-purple-700 text-white rounded-sm py-1 px-2 mb-4">{Token ? `${Token}` : "Nothing"}</h4>
       {Verified && (
@@ -48,3 +48,5 @@ export const VerifyEmail = () => {
     </div>
   );
 };
+
+export default VerifyEmail;

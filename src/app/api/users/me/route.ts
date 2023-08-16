@@ -7,6 +7,7 @@ dbConnect();
 
 export async function GET(request: NextRequest) {
   try {
+    // Fetching Data from Token based on User ID
     const userId = await getDataFromToken(request);
     // Fetching Data from DB based on User ID
     const user = await User.findById({ _id: userId }).select("-password");

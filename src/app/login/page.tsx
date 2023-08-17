@@ -89,7 +89,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="text-center">
-          <Link href="/reset-password" className="text-orange-500">
+          <Link href="/forgetpassword" className="text-orange-500">
             Forgot Password?
           </Link>
         </p>
